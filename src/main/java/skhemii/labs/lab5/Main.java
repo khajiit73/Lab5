@@ -3,38 +3,46 @@ package skhemii.labs.lab5;
 import skhemii.labs.lab5.entities.Shop;
 import skhemii.labs.lab5.entities.ShopManager;
 
+import java.io.IOException;
+
 public class Main {
     public static void main(String[] args) {
 
-        ShopManager manager = new ShopManager();
+        ShopManager shopManager = new ShopManager();
 
-        manager.addShop(new Shop(1, "Silpo","v Ornavi"));
-        manager.addShop(new Shop(2, "Silpo","tam de stare Silpo"));
-        manager.addShop(new Shop(3, "ATB","Alyaska bazar"));
-        manager.addShop(new Shop(4, "Novus","kolo avtovokzalu"));
-        manager.addShop(new Shop(5, "Silpo","tam de nove Silpo"));
+        ShopFileHandler shopFileHandler = new ShopFileHandler("catalog.txt", shopManager);
 
-        System.out.println("All shops:");
-        for (Shop shop: manager.getAllShops()) {
-            System.out.println(shop.toString());
+        try{
+            //populating file
+            shopFileHandler.addRecord(new Shop(1, "Silpo","v Ornavi"));
+            shopFileHandler.addRecord(new Shop(2, "Silpo","tam de stare Silpo"));
+            shopFileHandler.addRecord(new Shop(3, "ATB","Alyaska bazar"));
+            shopFileHandler.addRecord(new Shop(4, "Novus","kolo avtovokzalu"));
+            shopFileHandler.addRecord(new Shop(5, "Silpo","tam de nove Silpo"));
+
+            //reading data from file
+            System.out.println("\nShops:");
+            var shops = shopFileHandler.loadFromFile();
+            for (Shop shop : shops) {
+                System.out.println(shop.toString());
+            }
+
+            //removing record
+            shopFileHandler.removeRecord("Silpo");
+
+            System.out.println("\nShops after deleting:");
+            var shopsAfterDeleting = shopFileHandler.loadFromFile();
+            for (Shop shop : shopsAfterDeleting) {
+                System.out.println(shop.toString());
+            }
+
+            //search by name
+            System.out.println("\nShops by search:");
+            var shopSearched = shopFileHandler.searchByName("ATB");
+            System.out.println(shopSearched.toString());
         }
-
-        System.out.println("\nAll Silpo's:");
-        for (Shop shop: manager.findShopsByName("Silpo")) {
-            System.out.println(shop.toString());
-        }
-
-        System.out.println("\nAll shops sorted by name:");
-        for (Shop shop: manager.getAllShopsSortedByName()) {
-            System.out.println(shop.toString());
-        }
-
-        manager.removeShop(1);
-        manager.removeShop(5);
-
-        System.out.println("\nAll shops after removing some:");
-        for (Shop shop: manager.getAllShops()) {
-            System.out.println(shop.toString());
+        catch (IOException e){
+            System.out.println(e.getMessage());
         }
     }
 }

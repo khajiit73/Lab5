@@ -2,6 +2,8 @@ package skhemii.labs.lab5.entities;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Shop implements Serializable {
     private int id;
@@ -55,9 +57,26 @@ public class Shop implements Serializable {
     public String toString() {
         final StringBuilder sb = new StringBuilder("Shop{");
         sb.append("id=").append(id);
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", address='").append(address).append('\'');
+        sb.append(",name=").append(name);
+        sb.append(",address=").append(address);
         sb.append('}');
         return sb.toString();
+    }
+
+    public static Shop fromString(String shopString) {
+        // Regular expression to extract the values
+        Pattern pattern = Pattern.compile("Shop\\{id=(\\d+),name=([^,]+),address=([^}]+)}");
+        Matcher matcher = pattern.matcher(shopString);
+
+        if (matcher.find()) {
+            // Extracted values
+            int id = Integer.parseInt(matcher.group(1));
+            String name = matcher.group(2);
+            String address = matcher.group(3);
+            return new Shop(id, name, address);
+        }
+        else {
+            return null;
+        }
     }
 }

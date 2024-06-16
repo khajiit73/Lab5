@@ -1,12 +1,13 @@
 package skhemii.labs.lab5.entities;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ShopManager {
+public class ShopManager implements Serializable {
     private HashMap<Integer, Shop> shopMap;
 
     public ShopManager() {
@@ -25,6 +26,7 @@ public class ShopManager {
     public List<Shop> getAllShops() {
         return shopMap.values().stream().toList();
     }
+    public void clearShops() {shopMap = new HashMap<>();}
 
     public Shop findShopById(int id) {
         return shopMap.get(id);
